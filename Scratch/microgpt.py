@@ -118,10 +118,13 @@ def rmsnorm(x):
     return [xi * scale for xi in x]
 
 def gpt(token_id, pos_id, keys, values):
-    tok_emb = state_dict['wte'][token_id] # token embedding
-    pos_emb = state_dict['wpe'][pos_id] # position embedding
-    x = [t + p for t, p in zip(tok_emb, pos_emb)] # joint token and position embedding
-    x = rmsnorm(x)
+    tok_emb = state_dict['wte'][token_id] # token embedding {Here, state_dict['wte'] acts like a massive lookup table. The model plugs in the single token_id and pulls out the specific 16-number vector (tok_emb) assigned to that letter}
+    
+    pos_emb = state_dict['wpe'][pos_id] # position embedding {Here, state_dict['wpe'] acts like a massive lookup table. The model plugs in the single pos_id and pulls out the specific 16-number vector (pos_emb) assigned to that position}
+
+    x = [t + p for t, p in zip(tok_emb, pos_emb)] # joint token and position embedding {Here, we add the token embedding and position embedding to get the final embedding (x)}
+    
+    x = rmsnorm(x) # {Here, we apply RMSNorm to the embedding (x) to normalize it}
 
     for li in range(n_layer):
         # 1) Multi-head attention block
