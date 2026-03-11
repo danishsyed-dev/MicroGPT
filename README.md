@@ -39,6 +39,7 @@ MicroGPT/
 ├── Functions_Explaination/
 │   ├── dot_product.py                    # Dot product calculation example
 │   ├── matrix_vector_multiplication.py   # Matrix-vector multiply broken down
+│   └── matrix_multiplication.py          # Matrix-matrix multiply broken down
 │   └── unique_alphabet.py                # Tokenizer logic explored
 │
 ├── LEARNING_GUIDE.md            # Step-by-step learning guide (beginner-friendly)
@@ -56,7 +57,8 @@ MicroGPT/
 | Original Source | `microgpt.py` | Karpathy's unmodified 200-line GPT |
 | Expanded Code | `Scratch/microgpt.py` | Readable version with expanded functions |
 | Dot Product | `Functions_Explaination/dot_product.py` | Dot product calculation example |
-| Matrix Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
+| Matrix Vector Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
+| Matrix Multiply | `Functions_Explaination/matrix_multiplication.py` | Matrix-matrix multiplication broken into explicit loops |
 | Tokenizer | `Functions_Explaination/unique_alphabet.py` | How characters become token IDs |
 | Learning Guide | `LEARNING_GUIDE.md` | 14-step beginner guide to understand GPT |
 
@@ -125,7 +127,7 @@ MicroGPT implements a simplified GPT-2 in 200 lines:
 ```
 Token → [Embedding + Position] → [RMSNorm]
                                       ↓
-                          ┌── Transformer Block ──┐
+                          ┌── Transformer Block ───┐
                           │  RMSNorm → Attention   │
                           │       ↓ + residual     │
                           │  RMSNorm → MLP         │
