@@ -37,6 +37,7 @@ MicroGPT/
 │   └── microgpt.py              # My annotated version with expanded, readable code
 │
 ├── Functions_Explaination/
+│   ├── linear_funtion.py                 # Linear function example
 │   ├── dot_product.py                    # Dot product calculation example
 │   ├── matrix_vector_multiplication.py   # Matrix-vector multiply broken down
 │   └── matrix_multiplication.py          # Matrix-matrix multiply broken down
@@ -56,6 +57,7 @@ MicroGPT/
 |---|---|---|
 | Original Source | `microgpt.py` | Karpathy's unmodified 200-line GPT |
 | Expanded Code | `Scratch/microgpt.py` | Readable version with expanded functions |
+| Linear Function | `Functions_Explaination/linear_funtion.py` | Linear function example |
 | Dot Product | `Functions_Explaination/dot_product.py` | Dot product calculation example |
 | Matrix Vector Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
 | Matrix Multiply | `Functions_Explaination/matrix_multiplication.py` | Matrix-matrix multiplication broken into explicit loops |

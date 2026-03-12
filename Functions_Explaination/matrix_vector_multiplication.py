@@ -1,3 +1,4 @@
+# ===== Simplified Implementation =====
 def linear(x, w):
 
     output = []

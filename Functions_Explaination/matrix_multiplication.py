@@ -1,3 +1,4 @@
+# ===== Original Implementation =====
 my_vector = [4, 5]
 friend_matrix = [
     [2, 3], # Friend 1
