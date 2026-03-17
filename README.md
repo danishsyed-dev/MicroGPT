@@ -38,11 +38,12 @@ MicroGPT/
 │
 ├── Functions_Explaination/
 │   ├── activation_funtion.py             # Activation function example
-│   ├── linear_layer.py                   # Linear layer example
-│   ├── linear_funtion.py                 # Linear function example
 │   ├── dot_product.py                    # Dot product calculation example
+│   ├── linear_funtion.py                 # Linear function example
+│   ├── linear_layer.py                   # Linear layer example
+│   ├── matrix_multiplication.py          # Matrix-matrix multiply broken down
 │   ├── matrix_vector_multiplication.py   # Matrix-vector multiply broken down
-│   └── matrix_multiplication.py          # Matrix-matrix multiply broken down
+│   ├── softmax.py                        # Softmax breakdown
 │   └── unique_alphabet.py                # Tokenizer logic explored
 │
 ├── LEARNING_GUIDE.md            # Step-by-step learning guide (beginner-friendly)
@@ -66,13 +67,13 @@ MicroGPT/
 | Matrix Vector Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
 | Matrix Multiply | `Functions_Explaination/matrix_multiplication.py` | Matrix-matrix multiplication broken into explicit loops |
 | Tokenizer | `Functions_Explaination/unique_alphabet.py` | How characters become token IDs |
+| Softmax Breakdown | `Functions_Explaination/softmax.py` |Step-by-step softmax with numeric examples |
 | Learning Guide | `LEARNING_GUIDE.md` | 14-step beginner guide to understand GPT |
 
 ### 🔜 Planned
 
 | Component | Description | Status |
 |---|---|---|
-| Softmax Breakdown | Step-by-step softmax with numeric examples | 📋 Planned |
 | RMSNorm Breakdown | Normalization logic explored | 📋 Planned |
 | Attention Deep Dive | Single-head attention traced with real numbers | 📋 Planned |
 | Multi-Head Attention | How heads split and recombine | 📋 Planned |
