@@ -21,7 +21,13 @@ random.shuffle(docs)
 print(f"num docs: {len(docs)}")
 
 # Let there be a Tokenizer to translate strings to discrete symbols and back
+# Review Question 1: How does MicroGPT convert a letter like 'e' into a number?
+# Plain English explanation: Before doing any math, the model looks through all the text it has been given and pulls out every unique character. It sorts these characters (usually alphabetically) and assigns a simple counting number to each one, starting from 0. So, if 'e' happens to be the 5th letter in that sorted list, its specific number (token ID) becomes 4.
+# Simple real-world analogy: Think of a teacher creating an alphabetical class roster. Every student gets a roll number based on their alphabetical order. MicroGPT does the exact same thing for letters.
+# Step 1: set(''.join(docs)) merges all the text together and strips out the duplicates so we only have unique characters left.
+# Step 2: sorted(...) puts them in order.
 uchars = sorted(set(''.join(docs))) # unique characters in the dataset become token ids 0..n-1
+# Step 3: The model creates one extra number to represent the BOS (Beginning of Sequence), and sets the total vocab_size to be the number of characters plus one.
 BOS = len(uchars) # token id for the special Beginning of Sequence (BOS) token
 vocab_size = len(uchars) + 1 # total number of unique tokens, +1 is for BOS
 print(f"vocab size: {vocab_size}")
@@ -76,6 +82,10 @@ class Value:
                 child.grad += local_grad * v.grad
 
 # Initialize the parameters, to store the knowledge of the model.
+# Review Question 2: What does n_embd = 16 mean and why is it important?
+# Plain English explanation: A single ID number isn't enough to capture how a letter behaves in different words. n_embd = 16 tells the model that every single token must be represented by a detailed list of exactly 16 numbers. This is important because it gives the AI 16 different "dials" or "traits" to describe and relate that letter to other letters.
+# Simple real-world analogy: Imagine grading a movie. Giving it a single 5-star rating (like a token ID) doesn't tell you much. But grading it across 16 different categories like acting, music, writing, and pacing (an embedding vector) gives you a highly detailed description.
+# This sets the rule that all vectors will be 16 numbers long.
 n_embd = 16     # embedding dimension
 n_head = 4      # number of attention heads
 n_layer = 1     # number of layers
@@ -95,20 +105,23 @@ print(f"num params: {len(params)}")
 
 # Define the model architecture: a stateless function mapping token sequence and parameters to logits over what comes next.
 # Follow GPT-2, blessed among the GPTs, with minor differences: layernorm -> rmsnorm, no biases, GeLU -> ReLU
-def linear(x, w):
-
-    output = []
-
-    for row in w:  # each row of weights
-
-        total = 0
-
-        for wi, xi in zip(row, x):
-            total += wi * xi
-
-        output.append(total)
-
-    return output
+# Checkpoint Question 3: Show me the linear function in microgpt.py and walk through it step by step with a numeric example.
+# Plain English explanation: The linear function takes an input vector (a single list of numbers) and transforms it into a brand new vector. It does this by using a matrix (a stack of vectors, often called "weights") and calculating the dot product between your input vector and every single row in that matrix.
+# Simple real-world analogy: If a dot product is comparing your food preferences to one friend to get a similarity score, the linear function is comparing your food preferences to a whole classroom of friends. The output is a brand new list containing your similarity score for each person in the room.
+# Numeric example with small numbers: Imagine your input vector x is [1, 2]. Imagine your weight matrix w has two rows:
+# Row 1: [3, 4]
+# Row 2: [5, 6]
+# Step 1: Dot product of x and Row 1 -> (1 * 3) + (2 * 4) = 3 + 8 = 11
+# Step 2: Dot product of x and Row 2 -> (1 * 5) + (2 * 6) = 5 + 12 = 17
+# Final Output: Your new vector is [11, 17].
+def linear(x, w): 
+    # Let's break this into tiny steps:
+    # for wo in w: The model looks at the matrix w and loops through it one row (wo) at a time.
+    # zip(wo, x): For the current row, it takes a number from the row and pairs it with the matching number in your input vector x.
+    # wi * xi: It multiplies those paired numbers together.
+    # sum(...): It adds all those multiplied numbers up to get a single score for that row (completing the dot product).
+    # [...]: Finally, it wraps all those individual scores into a brand new list.
+    return [sum(wi * xi for wi, xi in zip(wo, x)) for wo in w]
 
 # Checkpoint Question 1: Walk through the softmax function in microgpt.py with the numbers [3.0, 1.0, 0.5]
 # Plain English explanation: As we learned, softmax takes a list of numbers and turns them into a list of percentages (probabilities) that add up to exactly 1.0 (or 100%).
@@ -141,6 +154,7 @@ def rmsnorm(x):
     return [xi * scale for xi in x]
 
 def gpt(token_id, pos_id, keys, values):
+    # Later, the model actually uses this when a letter enters the network:
     tok_emb = state_dict['wte'][token_id] # token embedding {Here, state_dict['wte'] acts like a massive lookup table. The model plugs in the single token_id and pulls out the specific 16-number vector (tok_emb) assigned to that letter}
     
     pos_emb = state_dict['wpe'][pos_id] # position embedding {Here, state_dict['wpe'] acts like a massive lookup table. The model plugs in the single pos_id and pulls out the specific 16-number vector (pos_emb) assigned to that position}
@@ -164,6 +178,15 @@ def gpt(token_id, pos_id, keys, values):
             q_h = q[hs:hs+head_dim]
             k_h = [ki[hs:hs+head_dim] for ki in keys[li]]
             v_h = [vi[hs:hs+head_dim] for vi in values[li]]
+            # Checkpoint Question 4: What is a dot product? Show me where it appears in the attention code.
+            # Plain English explanation: As we've seen, the dot product takes two vectors of the same size and returns a single number that measures how similar they are.
+            # Simple real-world analogy: Think of a matching game where you line up two different blocks of colors. For every color that perfectly matches in the exact same spot, you get points. You add up all those points to get your final "match score."
+            # The calculation: sum(q_h[j] * k_h[t][j] for j in range(head_dim))
+            # Let's break down exactly what this is doing:
+            # Step 1: The model has two vectors it wants to compare: q_h (a "Query" representing what the current token is looking for) and k_h[t] (a "Key" representing what a past token contains).
+            # Step 2: for j in range(head_dim) loops through every position in these vectors one by one.
+            # Step 3: q_h[j] * k_h[t][j] multiplies the numbers at the matching positions together.
+            # Step 4: sum(...) adds all those smaller multiplications into one final score. This score tells the model how strongly the current token should "attend" to or focus on that past token.
             attn_logits = [sum(q_h[j] * k_h[t][j] for j in range(head_dim)) / head_dim**0.5 for t in range(len(k_h))]
             attn_weights = softmax(attn_logits)
             head_out = [sum(attn_weights[t] * v_h[t][j] for t in range(len(v_h))) for j in range(head_dim)]
