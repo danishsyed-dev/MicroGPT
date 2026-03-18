@@ -47,6 +47,10 @@ class Value:
     def __pow__(self, other): return Value(self.data**other, (self,), (other * self.data**(other-1),))
     def log(self): return Value(math.log(self.data), (self,), (1/self.data,))
     def exp(self): return Value(math.exp(self.data), (self,), (math.exp(self.data),))
+    # Checkpoint Question 2: Where is ReLU used in the model, why is it needed, and what would happen if we removed it?
+    # Plain English explanation: ReLU is our "bouncer" rule: keep positive numbers the same, but turn negative numbers into zeros. If we removed it, the model would become painfully simple and entirely lose its ability to understand complex text.
+    # Why it's needed (The What-If): If you stack multiple linear layers on top of each other without a rule like ReLU in between them, mathematically, they just collapse into the equivalent of one single, giant linear layer. It would be like trying to build a complex machine out of straight pipes without using any elbow joints; you could never bend the pipes to create complex shapes. ReLU breaks up the straight lines, giving the model the ability to learn highly complex, non-linear patterns.
+    # The Rule (Line 50): max(0, self.data). This simple line uses Python's built-in max function to say "pick whichever is higher: zero, or the number." If the number is negative, zero is higher!
     def relu(self): return Value(max(0, self.data), (self,), (float(self.data > 0),))
     def __neg__(self): return self * -1
     def __radd__(self, other): return self + other
@@ -106,10 +110,29 @@ def linear(x, w):
 
     return output
 
+# Checkpoint Question 1: Walk through the softmax function in microgpt.py with the numbers [3.0, 1.0, 0.5]
+# Plain English explanation: As we learned, softmax takes a list of numbers and turns them into a list of percentages (probabilities) that add up to exactly 1.0 (or 100%).
 def softmax(logits):
+    # Step-by-step with real numbers: Let's trace exactly what the computer does with our input [3.0, 1.0, 0.5]:
+    
+    # Step 1 (max_val = ...): The model finds the highest number to use as a safety anchor so the math doesn't get too huge. The highest number is 3.0.
     max_val = max(val.data for val in logits)
+    
+    # Step 2 (val - max_val): It subtracts 3.0 from every number. Our list becomes [0.0, -2.0, -2.5].
+    # Step 3 (.exp()): It applies the exponential math function to each of these new numbers.
+    # Exponential of 0.0 = 1.0
+    # Exponential of -2.0 ≈ 0.135
+    # Exponential of -2.5 ≈ 0.082
     exps = [(val - max_val).exp() for val in logits]
+    
+    # Step 4 (total = sum(exps)): It adds these together. 1.0 + 0.135 + 0.082 =  1.217.
     total = sum(exps)
+    
+    # Step 5 (e / total): It divides each individual exponential by the total sum to get the final percentages.
+    # 1.0 / 1.217 ≈ 0.82 (82%)
+    # 0.135 / 1.217 ≈ 0.11 (11%)
+    # 0.082 / 1.217 ≈ 0.07 (7%)
+    # Our final output is [0.82, 0.11, 0.07], which beautifully sums up to 1.0!
     return [e / total for e in exps]
 
 def rmsnorm(x):
@@ -151,6 +174,7 @@ def gpt(token_id, pos_id, keys, values):
         x_residual = x
         x = rmsnorm(x)
         x = linear(x, state_dict[f'layer{li}.mlp_fc1'])
+        # The Application (Line 139): [xi.relu() for xi in x]. This loops through every single number (xi) in an entire list (x) and applies that bouncer rule to it.
         x = [xi.relu() for xi in x]
         x = linear(x, state_dict[f'layer{li}.mlp_fc2'])
         x = [a + b for a, b in zip(x, x_residual)]
