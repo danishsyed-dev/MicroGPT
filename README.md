@@ -37,10 +37,11 @@ MicroGPT/
 │   └── microgpt.py              # My annotated version with expanded, readable code
 │
 ├── Functions_Explaination/
-│   ├── activation_funtion.py             # Activation function example
+│   ├── activation_function.py             # Activation function example
 │   ├── dot_product.py                    # Dot product calculation example
-│   ├── linear_funtion.py                 # Linear function example
+│   ├── linear_function.py                 # Linear function example
 │   ├── linear_layer.py                   # Linear layer example
+│   ├── loss_function.py                  # Loss function simple example
 │   ├── matrix_multiplication.py          # Matrix-matrix multiply broken down
 │   ├── matrix_vector_multiplication.py   # Matrix-vector multiply broken down
 │   ├── softmax.py                        # Softmax breakdown
@@ -60,9 +61,10 @@ MicroGPT/
 |---|---|---|
 | Original Source | `microgpt.py` | Karpathy's unmodified 200-line GPT |
 | Expanded Code | `Scratch/microgpt.py` | Readable version with expanded functions |
-| Activation Function | `Functions_Explaination/activation_funtion.py` | Activation function example |
+| Loss Function | `Functions_Explaination/loss_function.py` | Loss function simple example |
+| Activation Function | `Functions_Explaination/activation_function.py` | Activation function example |
 | Linear Layer | `Functions_Explaination/linear_layer.py` | Linear layer example |
-| Linear Function | `Functions_Explaination/linear_funtion.py` | Linear function example |
+| Linear Function | `Functions_Explaination/linear_function.py` | Linear function example |
 | Dot Product | `Functions_Explaination/dot_product.py` | Dot product calculation example |
 | Matrix Vector Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
 | Matrix Multiply | `Functions_Explaination/matrix_multiplication.py` | Matrix-matrix multiplication broken into explicit loops |
