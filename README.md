@@ -39,6 +39,7 @@ MicroGPT/
 ├── Functions_Explaination/
 │   ├── activation_function.py             # Activation function example
 │   ├── dot_product.py                    # Dot product calculation example
+│   ├── gradient_function.py               # Gradient function example
 │   ├── linear_function.py                 # Linear function example
 │   ├── linear_layer.py                   # Linear layer example
 │   ├── loss_function.py                  # Loss function simple example
@@ -66,6 +67,7 @@ MicroGPT/
 | Linear Layer | `Functions_Explaination/linear_layer.py` | Linear layer example |
 | Linear Function | `Functions_Explaination/linear_function.py` | Linear function example |
 | Dot Product | `Functions_Explaination/dot_product.py` | Dot product calculation example |
+| Gradient Function | `Functions_Explaination/gradient_function.py` | Gradient function example |
 | Matrix Vector Multiply | `Functions_Explaination/matrix_vector_multiplication.py` | Matrix-vector multiplication broken into explicit loops |
 | Matrix Multiply | `Functions_Explaination/matrix_multiplication.py` | Matrix-matrix multiplication broken into explicit loops |
 | Tokenizer | `Functions_Explaination/unique_alphabet.py` | How characters become token IDs |
