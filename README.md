@@ -111,6 +111,11 @@ Same behavior, but with more readable, expanded code.
 
 > **Note:** Training takes a few minutes on CPU. This is expected — MicroGPT uses scalar-level autograd (each `Value` wraps a single float), which is intentionally simple but slow.
 
+### Run Functions Explanation (Individual Functions)
+```bash
+python Functions_Explaination/<function_name>.py
+```
+> **Note:** Replace `<function_name>` with the name of the function you want to run.
 ---
 
 ## 📖 Learning Resources
